@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math/rand"
 	"os"
 	"strings"
 	"trpg/game"
@@ -13,6 +14,8 @@ import (
 var isRunning bool = true
 
 func main() {
+	game.CleanTerminal()
+
 	user, err := game.LoadFromFile("data.json")
 
 	if err != nil {
@@ -38,12 +41,17 @@ func main() {
 
 		args := strings.Split(input, " ")
 
-		inputUser(args, user)
+		inputUser(args, &user)
 	}
 }
 
-func inputUser(args []string, user obj.Player) {
+func inputUser(args []string, user *obj.Player) {
 	switch args[0] {
+	case "b":
+		enemy := obj.Enemy[rand.Intn(len(obj.Enemy))]
+		game.FightEnemy(user, enemy, &isRunning)
+	case "clear":
+		game.CleanTerminal()
 	case "cn":
 		if len(args) < 2 {
 			fmt.Println("[Game] Please input new name after command")
@@ -56,14 +64,19 @@ func inputUser(args []string, user obj.Player) {
 		fmt.Printf("[Game] Change your name to %s\n", args[1])
 		user.SetName(args[1])
 	case "h":
+
 		fmt.Print(`[Game] All commands:
+b		hunting for enemy
+clear		clear terminal
+cn		change nickname
 h		for get all information
-q		quit game
+q, quit		quit game
+resetgame	reset save data
 s		save data
 v		view user
 
 `)
-	case "q":
+	case "q", "quit":
 		isRunning = false
 	case "resetgame":
 		if len(args) < 2 {
@@ -75,10 +88,10 @@ v		view user
 			return
 		}
 
-		user = obj.Player{Name: user.Name, Money: 0, Health: obj.Health{Current: 10, Max: 10}}
+		*user = obj.Player{Name: user.Name, Money: 0, Health: obj.Health{Current: 10, Max: 10}}
 		fmt.Println("[Game] Data has been reset")
 	case "s":
-		game.SaveToFile("data.json", user)
+		game.SaveToFile("data.json", *user)
 		fmt.Println("[Game] Data has been saved")
 	case "v":
 		user.Display()
