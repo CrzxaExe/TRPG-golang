@@ -27,7 +27,7 @@ func FightEnemy(player *obj.Player, target obj.Actor, isRunning *bool) {
 }
 
 func getPlayerStats(player *obj.Player) (int, int, int) {
-	var atk, def, res int = 0, 0, 0
+	var atk, def, res int = 2, 0, 0
 
 	if player.Weapon != nil {
 		if player.Weapon.Stat.Atk > 0 {
@@ -58,7 +58,7 @@ func Fighting(player *obj.Player, target *obj.Actor, isFighting *bool) {
 		return
 	}
 	if target.Health.Current <= 0 {
-		fmt.Printf("[Fight] You won the fight, you get %f\n\n", target.XP)
+		fmt.Printf("[Fight] You won the fight, you get %.2f\n\n", target.XP)
 		Leveling(player, target.XP)
 		*isFighting = false
 		return
@@ -77,10 +77,13 @@ func Fighting(player *obj.Player, target *obj.Actor, isFighting *bool) {
 	case "h", "help":
 		fmt.Print(`[Fight] Help command:
 h		help
+s		using shield, increase your def
 v		display enemy & player stats
 q, flee		quit battle
 
 `)
+	case "s":
+		DefAction(player, target)
 	case "v":
 		CleanTerminal()
 		ShowStats(*player, *target)
@@ -120,6 +123,31 @@ func AttackAction(player *obj.Player, enemy *obj.Actor) {
 
 	enemy.Health.Current -= playerDmg
 
+	fmt.Printf("[Fight] You success do %d atk to enemy, but you get %d damage\n", playerDmg, enemyAtk)
+
+	if player.Health.Current < 0 {
+		player.Health.Current = 0
+		player.SetCurrentHealth(0)
+	}
+	player.SetCurrentHealth(player.Health.Current)
+}
+
+func DefAction(player *obj.Player, enemy *obj.Actor) {
+	var _, playerDef, _ int = getPlayerStats(player)
+
+	enemyAtk, playerDmg := enemy.Stats.Atk-((playerDef+2)*2), 0
+	if enemyAtk < 0 {
+		enemyAtk = 1
+	}
+	if playerDmg < 0 {
+		playerDmg = 1
+	}
+
+	player.Health.Current -= enemyAtk
+
+	enemy.Health.Current -= playerDmg
+
+	fmt.Printf("[Fight] You blocking, you get %d damage\n", enemyAtk)
 	if player.Health.Current < 0 {
 		player.Health.Current = 0
 		player.SetCurrentHealth(0)

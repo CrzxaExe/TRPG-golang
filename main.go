@@ -48,7 +48,7 @@ func main() {
 func inputUser(args []string, user *obj.Player) {
 	switch args[0] {
 	case "b":
-		enemy := obj.Enemy[rand.Intn(len(obj.Enemy))]
+		enemy := obj.Enemy[user.Area][rand.Intn(len(obj.Enemy))]
 		game.FightEnemy(user, enemy, &isRunning)
 	case "clear":
 		game.CleanTerminal()
@@ -77,6 +77,7 @@ v		view user
 
 `)
 	case "q", "quit":
+		fmt.Println("[Game] Exiting game")
 		isRunning = false
 	case "resetgame":
 		if len(args) < 2 {

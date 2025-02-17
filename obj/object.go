@@ -5,6 +5,8 @@ import "fmt"
 type Player struct {
 	Name       string     `json:"name"`
 	Experience Experience `json:"experience"`
+	Area       int16      `json:"area"`
+	MaxArea    int16      `json:"max_area"`
 	Money      int32      `json:"money"`
 	Health     Health     `json:"health"`
 	Weapon     *Weapon    `json:"weapon"`
@@ -86,6 +88,7 @@ func (t Player) Display() {
 	if len(t.Items) != 0 {
 		fmt.Printf("Items	: %v\n", t.Items)
 	}
+	fmt.Printf("Area	: %d\n", t.Area)
 }
 
 // set player name
