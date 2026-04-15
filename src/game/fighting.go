@@ -6,7 +6,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"trpg/obj"
+	"trpg/src/obj"
 )
 
 func FightEnemy(player *obj.Player, target obj.Actor, isRunning *bool) {

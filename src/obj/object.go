@@ -15,8 +15,13 @@ type Player struct {
 }
 
 type Item struct {
-	Name   string `json:"name"`
-	Amount int    `json:"amount"`
+	Name       string         `json:"name"`
+	Amount     int            `json:"amount"`
+	Attributes []ItemAtribute `json:"attributes"`
+}
+type ItemAtribute struct {
+	Name  string `json:"name"`
+	Value uint32 `json:"value"`
 }
 
 type Health struct {
@@ -75,7 +80,7 @@ type ActorDrop struct {
 
 // Displaying user stats
 func (t Player) Display() {
-	fmt.Printf("Name	: %q\n", t.Name)
+	fmt.Printf("Name	: %s\n", t.Name)
 	fmt.Printf("Lvl	: %d (%.2f XP) \n", t.Experience.Lvl, t.Experience.Exp)
 	if t.Weapon != nil {
 		fmt.Printf("Weapon	: %s, %d Atk, %d Def, %.f Aspd\n", t.Weapon.Name, t.Weapon.Stat.Atk, t.Weapon.Stat.Def, t.Weapon.Stat.Aspd)
@@ -98,6 +103,9 @@ func (t *Player) SetName(name string) {
 
 func (t *Player) SetCurrentHealth(hp int) {
 	t.Health.Current = hp
+}
+func (t *Player) SetMaxHealth(hp int) {
+	t.Health.Max = hp
 }
 
 func (t *Player) AddXp(xp float32) {

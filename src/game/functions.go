@@ -6,7 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
-	"trpg/obj"
+	"trpg/src/obj"
 )
 
 func SaveToFile(filename string, data obj.Player) error {
